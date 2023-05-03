@@ -24,6 +24,7 @@ public class Controlador {
     public Controlador() {
         vista = new Vista();
         modelo = new PokemonDAOImp();
+        modelo.crearPokedexCSV();
     }
 
 }

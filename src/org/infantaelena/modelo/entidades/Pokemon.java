@@ -17,6 +17,8 @@ public class Pokemon {
     private int defensaEspecial;
     private int velocidad;
 
+
+
     public Pokemon(String nombre, TipoPokemon tipoPrimario, TipoPokemon tipoSecundario, int puntosSalud,
                    int ataque, int defensa, int ataqueEspecial, int defensaEspecial, int velocidad) {
         this.nombre = nombre;
@@ -63,7 +65,11 @@ public class Pokemon {
     }
 
     public void setTipoSecundario(TipoPokemon tipoSecundario) {
-        this.tipoSecundario = tipoSecundario;
+        if(tipoPrimario.equals(tipoSecundario)) {
+            this.tipoSecundario = TipoPokemon.NINGUNO;
+        } else {
+            this.tipoSecundario = tipoSecundario;
+        }
     }
 
     public int getPuntosSalud() {

@@ -8,4 +8,9 @@ package org.infantaelena.excepciones;
  *
  */
 public class PokemonNotFoundException extends Exception {
+
+    public PokemonNotFoundException(String mensaje){
+        super(mensaje);
+    }
+
 }
