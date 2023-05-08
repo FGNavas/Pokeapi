@@ -20,6 +20,7 @@ import java.util.Scanner;
  */
 public class PokemonDAOImp implements PokemonDAO {
     private static final String RUTA = "modelo/dao/pokedex.csv";
+    private static final String RUTA_TEMP = "modelo/dao/pokedex.tmp";
     private List<Pokemon> listaSesion;
 
 
@@ -130,11 +131,76 @@ public class PokemonDAOImp implements PokemonDAO {
 
     @Override
     public void actualizar(Pokemon pokemon) throws PokemonNotFoundException {
+        File pokedex = new File(RUTA);
+        File pokedexTemp =new File(RUTA_TEMP);
+        try(FileWriter fw = new FileWriter(pokedexTemp);
+            PrintWriter pw = new PrintWriter(fw);
+            FileReader fr = new FileReader(pokedex);
+            BufferedReader br = new BufferedReader(fr)) {
+            String nombreAbuscar= pokemon.getNombre();
+            String linea;
+            boolean encontrado = false;
+            while((linea =br.readLine()) != null){
+                String [] campo =linea.split(":");
+                String nombrePokedex = campo[0];
+                if(nombrePokedex.equals(nombreAbuscar)){
+                pw.println(pokemon.toString());
+                encontrado=true;
+                } else{
+                    pw.println(linea);
+                }
+            }
+           if(!encontrado){
+               throw  new PokemonNotFoundException("Pokemon no encontrado");
+           } else{
+               pokedex.delete();
+               pokedexTemp.renameTo(pokedex);
+           }
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (PokemonNotFoundException e){
+            System.err.println(e);
+        }
 
     }
 
     @Override
     public void eliminarPorNombre(String nombre) throws PokemonNotFoundException {
+        File pokedex = new File(RUTA);
+        File pokedexTemp = new File(RUTA_TEMP);
+        boolean encontrado = false;
+        try(FileReader fr =new FileReader(pokedex);
+            BufferedReader br = new BufferedReader(fr);
+            FileWriter fw = new FileWriter(pokedexTemp);
+            PrintWriter pw = new PrintWriter(fw);) {
+            String linea;
+            while((linea=br.readLine()) != null){
+                String [] campo = linea.split(":");
+                String nombrePokedex = campo[0];
+                if(nombre.equals(nombrePokedex)){
+                    continue;
+                } else {
+                    pw.println(linea);
+                }
+            }
+            if(!encontrado){
+                throw new PokemonNotFoundException("El pokemon no se encuentra en la pokedex");
+            } else {
+                pokedex.delete();
+                pokedexTemp.renameTo(pokedex);
+            }
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 }

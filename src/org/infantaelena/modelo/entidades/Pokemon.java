@@ -57,8 +57,12 @@ public class Pokemon {
     }
 
     public void setTipoPrimario(TipoPokemon tipoPrimario) {
-        this.tipoPrimario = tipoPrimario;
-    }
+        if(tipoPrimario.equals(TipoPokemon.NINGUNO)){
+            this.tipoPrimario = TipoPokemon.NORMAL;
+        } else {
+            this.tipoPrimario = tipoPrimario;
+        }
+        }
 
     public TipoPokemon getTipoSecundario() {
         return tipoSecundario;
@@ -144,5 +148,11 @@ public class Pokemon {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s:%s:%s:%d:%d:%d:%d:%d:%d",
+                this.nombre,this.tipoPrimario,this.tipoSecundario,this.puntosSalud,this.ataque,
+                this.defensa,this.ataqueEspecial,this.defensaEspecial,this.velocidad);
+    }
 }
 
