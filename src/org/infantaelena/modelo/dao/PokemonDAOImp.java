@@ -14,9 +14,9 @@ import java.util.Scanner;
  * Clase que implementa los métodos de acceso a datos de la clase Pokemon
  * Esta puede hacerse mediante un fichero CSV separado por puntos y coma o una base de datos
  *
- * @author
- * @version 1.0
- * @date 24/04/2023
+ * @author Fernando
+ * @version 1.3
+ * @date 08/05/2023
  */
 public class PokemonDAOImp implements PokemonDAO {
     private static final String RUTA = "modelo/dao/pokedex.csv";
