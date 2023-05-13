@@ -9,7 +9,4 @@ package org.infantaelena.excepciones;
  *
  */
 public class PokemonRepeatedException extends Exception{
-    public PokemonRepeatedException(String mensaje){
-        super(mensaje);
-    }
 }
