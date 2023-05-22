@@ -9,14 +9,15 @@ package org.infantaelena.modelo.entidades;
  */
 public class Pokemon {
     private String nombre;
-    private TipoPokemon tipoPrimario;
-    private TipoPokemon tipoSecundario;
+    private String tipoPrimario;
+    private String tipoSecundario;
     private int puntosSalud;
     private int ataque;
     private int defensa;
     private int ataqueEspecial;
     private int defensaEspecial;
     private int velocidad;
+
 
     /**
      * Crea un nuevo objeto Pokemon con todos los atributos especificados. En los set se establece la condicion para
@@ -32,7 +33,7 @@ public class Pokemon {
      * @param defensaEspecial   el valor de defensa especial del pokemon
      * @param velocidad         el valor de velocidad del pokemon
      */
-    public Pokemon(String nombre, TipoPokemon tipoPrimario, TipoPokemon tipoSecundario, int puntosSalud,
+    public Pokemon(String nombre, String tipoPrimario, String tipoSecundario, int puntosSalud,
                    int ataque, int defensa, int ataqueEspecial, int defensaEspecial, int velocidad) {
         this.nombre = nombre;
         this.tipoPrimario = tipoPrimario;
@@ -50,8 +51,8 @@ public class Pokemon {
      */
     public Pokemon() {
         this.nombre = "";
-        this.tipoPrimario = TipoPokemon.NORMAL;
-        this.tipoSecundario =TipoPokemon.NINGUNO;
+        this.tipoPrimario = TipoPokemon.NORMAL.toString();
+        this.tipoSecundario = TipoPokemon.NINGUNO.toString();
         this.puntosSalud = 1;
         this.ataque = 1;
         this.defensa = 1;
@@ -83,7 +84,7 @@ public class Pokemon {
      *
      * @return el tipo primario del pokemon
      */
-    public TipoPokemon getTipoPrimario() {
+    public String getTipoPrimario() {
         return tipoPrimario;
     }
 
@@ -93,12 +94,8 @@ public class Pokemon {
      *
      * @param tipoPrimario el tipo primario del pokemon
      */
-    public void setTipoPrimario(TipoPokemon tipoPrimario) {
-        if(tipoPrimario.equals(TipoPokemon.NINGUNO)){
-            this.tipoPrimario = TipoPokemon.NORMAL;
-        } else {
+    public void setTipoPrimario(String tipoPrimario) {
             this.tipoPrimario = tipoPrimario;
-        }
         }
 
     /**
@@ -106,7 +103,7 @@ public class Pokemon {
      *
      * @return el tipo secundario del pokemon
      */
-    public TipoPokemon getTipoSecundario() {
+    public String getTipoSecundario() {
         return tipoSecundario;
     }
 
@@ -116,12 +113,10 @@ public class Pokemon {
      *
      * @param tipoSecundario el tipo secundario del pokemon
      */
-    public void setTipoSecundario(TipoPokemon tipoSecundario) {
-        if(tipoPrimario.equals(tipoSecundario)) {
-            this.tipoSecundario = TipoPokemon.NINGUNO;
-        } else {
+    public void setTipoSecundario(String tipoSecundario) {
+
             this.tipoSecundario = tipoSecundario;
-        }
+
     }
     /**
      * Devuelve los puntos de salud del pokemon.

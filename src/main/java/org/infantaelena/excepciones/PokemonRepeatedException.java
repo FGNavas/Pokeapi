@@ -1,5 +1,7 @@
 package org.infantaelena.excepciones;
 
+import javax.swing.*;
+
 /**
  *
  * Esta clase se encarga de lanzar una excepción cuando se intenta añadir un pokemon repetido
@@ -8,5 +10,6 @@ package org.infantaelena.excepciones;
  * @date 24/04/2023
  *
  */
-public class PokemonRepeatedException extends Exception{
+public class PokemonRepeatedException extends Exception {
 }
+

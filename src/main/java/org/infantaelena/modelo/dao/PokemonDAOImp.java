@@ -21,7 +21,7 @@ import java.util.List;
  * @since 13/05/2023
  */
 public class PokemonDAOImp implements PokemonDAO {
-    private final String RUTA ="jdbc:sqlite:main/resources/";
+    private final String RUTA ="jdbc:sqlite:src\\main\\resources\\";
     private final String DEFAULT_DB = "pokedex.db";
     private final String POKEMON_TABLE = "CREATE TABLE IF NOT EXISTS pokemon (\n"
             + " nombre VARCHAR(50) NOT NULL UNIQUE,\n"
@@ -32,33 +32,41 @@ public class PokemonDAOImp implements PokemonDAO {
             + " defensa INT,\n"
             + " ataqueEspecial INT,\n"
             + " defensaEspecial INT,\n"
-            + " velocidad INT,\n"
+            + " velocidad INT\n"
             + ");\n";
 
-    private final String POKEMON_UPDATE ="UPDATE pokemon SET tipoPrimario = ?, tipoSecundario = ?, puntoSalud = ?," +
-            " ataque = ?, defensa = ?, ataqueEspecial = ?, defensaEspecial = ?, velocidad = ? ;";
+    private final String POKEMON_UPDATE ="UPDATE pokemon SET nombre = ?, tipoPrimario = ?, tipoSecundario = ?, puntosSalud = ?," +
+            " ataque = ?, defensa = ?, ataqueEspecial = ?, defensaEspecial = ?, velocidad = ? ";
     private final String POKEMON_INSERT= "INSERT INTO pokemon (nombre, tipoPrimario, tipoSecundario, puntosSalud," +
             " ataque, defensa, ataqueEspecial, defensaEspecial, velocidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+
+    private final String POKEMON_SEARCH ="SELECT nombre, tipoPrimario, tipoSecundario, puntosSalud," +
+                        "ataque, defensa, ataqueEspecial, defensaEspecial, velocidad FROM pokemon ";
     private final String POKEMON_DELETE = "DELETE FROM pokemon ";
-    private final String POKEMON_SEARCH ="SELECT * FROM pokemon ";
-    private final String BY_NAME = " WHERE nombre LIKE ";
-    private final String END_SQL= ";";
+    private final String BY_NAME = " WHERE nombre LIKE '%";
+    private final String END_SQL= "%';";
     private Connection connection;
     private Statement statement;
+
+    public TipoPokemon[] tiposPokemon = TipoPokemon.values();
+
 
     /**
      * Crea un nuevo objeto PokemonDAOImp utilizando la base de datos por defecto.
      */
    public PokemonDAOImp (){
+
         try {
             connection = DriverManager.getConnection(RUTA+DEFAULT_DB);
             statement = connection.createStatement();
 
+
             String createTableSQL = POKEMON_TABLE;
             statement.execute(createTableSQL);
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+
         }
     }
 
@@ -88,14 +96,11 @@ public class PokemonDAOImp implements PokemonDAO {
         Pokemon encontrado = null;
         try {
             encontrado = leerPorNombre(pokemon.getNombre());
-        } catch (PokemonNotFoundException e) {
-
-        }
-        if (encontrado != null) {
             throw new PokemonRepeatedException();
-        } else {
+        } catch (PokemonNotFoundException e) {
             trabajoSQL(POKEMON_INSERT, pokemon);
         }
+
     }
 
     /**
@@ -108,7 +113,9 @@ public class PokemonDAOImp implements PokemonDAO {
     @Override
     public Pokemon leerPorNombre(String nombre) throws PokemonNotFoundException {
         Pokemon pokemonBuscado = null;
-        try (ResultSet buscar = statement.executeQuery(POKEMON_SEARCH + BY_NAME + nombre + END_SQL)) {
+        String consulta = POKEMON_SEARCH + BY_NAME + nombre + END_SQL;
+        System.out.println(consulta);
+        try (ResultSet buscar = statement.executeQuery(consulta)) {
             if (!buscar.next()) {
                 throw new PokemonNotFoundException();
             } else {
@@ -168,21 +175,20 @@ public class PokemonDAOImp implements PokemonDAO {
      */
     @Override
     public void eliminarPorNombre(String nombre) throws PokemonNotFoundException {
-        Pokemon pokemonABorrar = null;
+        Pokemon pokemonABorrar = leerPorNombre(nombre);
 
-            pokemonABorrar = leerPorNombre(nombre);
-
-            if(pokemonABorrar == null){
-                throw new PokemonNotFoundException();
-            } else{
-                try (ResultSet borrar = statement.executeQuery(POKEMON_DELETE + BY_NAME + nombre + END_SQL)){
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+        if (pokemonABorrar == null) {
+            throw new PokemonNotFoundException();
+        } else {
+            try (Statement statement = connection.createStatement()) {
+                String delete = POKEMON_DELETE + BY_NAME + nombre + END_SQL;
+                statement.executeUpdate(delete);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-
-
         }
+    }
+
 
     // FUNCIONES AUXILIARES
     /**
@@ -192,11 +198,14 @@ public class PokemonDAOImp implements PokemonDAO {
      * @return el Pokemon creado
      */
     private Pokemon leerPokemon(ResultSet resultBusqueda) {
-        Pokemon pokemonBuscado;
+        Pokemon pokemonBuscado = new Pokemon();
         try {
-            String nombre = resultBusqueda.getNString("nombre");
-            TipoPokemon tipPri = TipoPokemon.valueOf(resultBusqueda.getString("tipoPrimario"));
-            TipoPokemon tipSec = TipoPokemon.valueOf(resultBusqueda.getString("tipoSecundario"));
+            String nombre = resultBusqueda.getString("nombre");
+
+
+               String tipPri = resultBusqueda.getString("tipoPrimario");
+               String tipSec = resultBusqueda.getString("tipoSecundario");
+
             int puntosSalud = resultBusqueda.getInt("puntosSalud");
             int ataque = resultBusqueda.getInt("ataque");
             int defensa = resultBusqueda.getInt("defensa");
@@ -205,8 +214,10 @@ public class PokemonDAOImp implements PokemonDAO {
             int velocidad = resultBusqueda.getInt("velocidad");
             pokemonBuscado = new Pokemon(nombre, tipPri, tipSec,
                     puntosSalud, ataque, defensa, ataqueEspecial, defensaEspecial, velocidad);
+
+            System.out.println(pokemonBuscado);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         } finally {
             if (resultBusqueda != null) {
                 try {
@@ -229,8 +240,10 @@ public class PokemonDAOImp implements PokemonDAO {
     public void trabajoSQL(String sqlQuery, Pokemon pokemon) {
         try (PreparedStatement updateStatement = connection.prepareStatement(sqlQuery)) {
             updateStatement.setString(1, pokemon.getNombre());
+                //
             updateStatement.setString(2, pokemon.getTipoPrimario().toString());
-            updateStatement.setString(3, pokemon.getTipoSecundario().toString());
+            updateStatement.setString(3, String.valueOf(pokemon.getTipoSecundario()));
+                //
             updateStatement.setInt(4, pokemon.getPuntosSalud());
             updateStatement.setInt(5, pokemon.getAtaque());
             updateStatement.setInt(6, pokemon.getDefensa());
@@ -241,5 +254,16 @@ public class PokemonDAOImp implements PokemonDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String[] obtenerTiposPokemon() {
+        TipoPokemon[] tiposPokemon = TipoPokemon.values();
+        String[] tiposPokemonArray = new String[tiposPokemon.length];
+
+        for (int i = 0; i < tiposPokemon.length; i++) {
+            tiposPokemonArray[i] = tiposPokemon[i].toString();
+        }
+
+        return tiposPokemonArray;
     }
 }

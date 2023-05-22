@@ -1,4 +1,7 @@
 package org.infantaelena.excepciones;
+
+import javax.swing.*;
+
 /**
  *
  * Esta clase se encarga de lanzar una excepción cuando no se encuentra un pokemon
@@ -8,4 +11,6 @@ package org.infantaelena.excepciones;
  *
  */
 public class PokemonNotFoundException extends Exception {
+
+
 }

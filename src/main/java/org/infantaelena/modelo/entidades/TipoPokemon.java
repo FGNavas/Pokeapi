@@ -1,6 +1,7 @@
 package org.infantaelena.modelo.entidades;
 
 public enum TipoPokemon {
+    NINGUNO,
     NORMAL,
     FUEGO,
     AGUA,
@@ -19,5 +20,9 @@ public enum TipoPokemon {
     SINIESTRO,
     ACERO,
     HADA,
-    NINGUNO
-}
+
+
+
+
+
+    }
