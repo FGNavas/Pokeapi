@@ -1,11 +1,7 @@
 package org.infantaelena.vista;
-import org.infantaelena.controlador.Controlador;
-import org.infantaelena.modelo.entidades.Pokemon;
 import org.infantaelena.modelo.entidades.TipoPokemon;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +29,8 @@ public class Vista extends JFrame{
     private JTextField cajaDefensa;
     private JTextField cajaVelocidad;
     private JTextField cajaDefEsp;
+    private JButton mostrarTodosLosPokemonButton;
+    private JButton BUSCARPORTIPOButton;
     private final String POKEMON_STATUS = "El pokemon ";
     private final String NOT_FOUND = " no se encuentra en la pokedex";
     private final String REPEATED = " esta repetido";
@@ -40,6 +38,13 @@ public class Vista extends JFrame{
     private final String CREATED = " ha sido introducido ";
     private final String DELETED = " ha sido borrado";
 
+    public JButton getMostrarTodosLosPokemonButton() {
+        return mostrarTodosLosPokemonButton;
+    }
+
+    public void setMostrarTodosLosPokemonButton(JButton mostrarTodosLosPokemonButton) {
+        this.mostrarTodosLosPokemonButton = mostrarTodosLosPokemonButton;
+    }
 
     public JTextField getTxtName() {
         return txtName;

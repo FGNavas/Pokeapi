@@ -42,10 +42,14 @@ public class PokemonDAOImp implements PokemonDAO {
 
 
     private final String POKEMON_SEARCH ="SELECT nombre, tipoPrimario, tipoSecundario, puntosSalud," +
-                        "ataque, defensa, ataqueEspecial, defensaEspecial, velocidad FROM pokemon ";
+            "ataque, defensa, ataqueEspecial, defensaEspecial, velocidad FROM pokemon ";
     private final String POKEMON_DELETE = "DELETE FROM pokemon ";
     private final String BY_NAME = " WHERE nombre LIKE '%";
+    private final String BY_TYPE_1 = " WHERE tipoPrimario = ";
+    private final
     private final String END_SQL= "%';";
+    private final String END_SQL_2 = ";";
+
     private Connection connection;
     private Statement statement;
 
@@ -55,7 +59,7 @@ public class PokemonDAOImp implements PokemonDAO {
     /**
      * Crea un nuevo objeto PokemonDAOImp utilizando la base de datos por defecto.
      */
-   public PokemonDAOImp (){
+    public PokemonDAOImp (){
 
         try {
             connection = DriverManager.getConnection(RUTA+DEFAULT_DB);
@@ -75,7 +79,7 @@ public class PokemonDAOImp implements PokemonDAO {
      *
      * @param db el nombre de la base de datos
      */
-  public  PokemonDAOImp (String db){
+    public  PokemonDAOImp (String db){
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:resources/"+db);
             String createTableSQL = POKEMON_TABLE;
@@ -135,9 +139,21 @@ public class PokemonDAOImp implements PokemonDAO {
     @Override
     public List<Pokemon> leerTodos() {
         List<Pokemon> listaPokemon = new ArrayList<>();
-        try (ResultSet allPokedex = statement.executeQuery(POKEMON_SEARCH + END_SQL)) {
+        Pokemon pokemon = null;
+        try (ResultSet allPokedex = statement.executeQuery(POKEMON_SEARCH + END_SQL_2)) {
             while (allPokedex.next()) {
-                Pokemon pokemon = leerPokemon(allPokedex);
+                String nombre = allPokedex.getString("nombre");
+                String tipPri = allPokedex.getString("tipoPrimario");
+                String tipSec = allPokedex.getString("tipoSecundario");
+                int puntosSalud = allPokedex.getInt("puntosSalud");
+                int ataque = allPokedex.getInt("ataque");
+                int defensa = allPokedex.getInt("defensa");
+                int ataqueEspecial = allPokedex.getInt("ataqueEspecial");
+                int defensaEspecial = allPokedex.getInt("defensaEspecial");
+                int velocidad = allPokedex.getInt("velocidad");
+                pokemon = new Pokemon(nombre, tipPri, tipSec,
+                        puntosSalud, ataque, defensa, ataqueEspecial, defensaEspecial, velocidad);
+                System.out.println(pokemon);
                 listaPokemon.add(pokemon);
             }
         } catch (SQLException e) {
@@ -197,37 +213,23 @@ public class PokemonDAOImp implements PokemonDAO {
      * @param resultBusqueda el ResultSet que contiene los datos del Pokemon
      * @return el Pokemon creado
      */
-    private Pokemon leerPokemon(ResultSet resultBusqueda) {
-        Pokemon pokemonBuscado = new Pokemon();
-        try {
+    private Pokemon leerPokemon(ResultSet resultBusqueda) throws SQLException {
+        Pokemon pokemonBuscado = null;
+        do {
             String nombre = resultBusqueda.getString("nombre");
-
-
-               String tipPri = resultBusqueda.getString("tipoPrimario");
-               String tipSec = resultBusqueda.getString("tipoSecundario");
-
+            String tipPri = resultBusqueda.getString("tipoPrimario");
+            String tipSec = resultBusqueda.getString("tipoSecundario");
             int puntosSalud = resultBusqueda.getInt("puntosSalud");
             int ataque = resultBusqueda.getInt("ataque");
             int defensa = resultBusqueda.getInt("defensa");
             int ataqueEspecial = resultBusqueda.getInt("ataqueEspecial");
             int defensaEspecial = resultBusqueda.getInt("defensaEspecial");
             int velocidad = resultBusqueda.getInt("velocidad");
-            pokemonBuscado = new Pokemon(nombre, tipPri, tipSec,
+            Pokemon pokemon = new Pokemon(nombre, tipPri, tipSec,
                     puntosSalud, ataque, defensa, ataqueEspecial, defensaEspecial, velocidad);
-
-            System.out.println(pokemonBuscado);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            if (resultBusqueda != null) {
-                try {
-                    resultBusqueda.close();
-                } catch (SQLException e) {
-
-                }
-            }
-        }
-
+            System.out.println(pokemon);
+            pokemonBuscado = pokemon;
+        } while (resultBusqueda.next());
         return pokemonBuscado;
     }
     /**
@@ -240,10 +242,10 @@ public class PokemonDAOImp implements PokemonDAO {
     public void trabajoSQL(String sqlQuery, Pokemon pokemon) {
         try (PreparedStatement updateStatement = connection.prepareStatement(sqlQuery)) {
             updateStatement.setString(1, pokemon.getNombre());
-                //
+            //
             updateStatement.setString(2, pokemon.getTipoPrimario().toString());
             updateStatement.setString(3, String.valueOf(pokemon.getTipoSecundario()));
-                //
+            //
             updateStatement.setInt(4, pokemon.getPuntosSalud());
             updateStatement.setInt(5, pokemon.getAtaque());
             updateStatement.setInt(6, pokemon.getDefensa());
@@ -256,6 +258,9 @@ public class PokemonDAOImp implements PokemonDAO {
         }
     }
 
+
+
+
     public String[] obtenerTiposPokemon() {
         TipoPokemon[] tiposPokemon = TipoPokemon.values();
         String[] tiposPokemonArray = new String[tiposPokemon.length];
@@ -265,5 +270,29 @@ public class PokemonDAOImp implements PokemonDAO {
         }
 
         return tiposPokemonArray;
+    }
+    public List<Pokemon> buscarPorTipo(String tipoAbuscar) {
+        List<Pokemon> listaPokemon = new ArrayList<>();
+        Pokemon pokemon = null;
+        try (ResultSet allPokedex = statement.executeQuery(POKEMON_SEARCH + END_SQL_2)) {
+            while (allPokedex.next()) {
+                String nombre = allPokedex.getString("nombre");
+                String tipPri = allPokedex.getString("tipoPrimario");
+                String tipSec = allPokedex.getString("tipoSecundario");
+                int puntosSalud = allPokedex.getInt("puntosSalud");
+                int ataque = allPokedex.getInt("ataque");
+                int defensa = allPokedex.getInt("defensa");
+                int ataqueEspecial = allPokedex.getInt("ataqueEspecial");
+                int defensaEspecial = allPokedex.getInt("defensaEspecial");
+                int velocidad = allPokedex.getInt("velocidad");
+                pokemon = new Pokemon(nombre, tipPri, tipSec,
+                        puntosSalud, ataque, defensa, ataqueEspecial, defensaEspecial, velocidad);
+                System.out.println(pokemon);
+                listaPokemon.add(pokemon);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listaPokemon;
     }
 }

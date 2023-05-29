@@ -8,8 +8,10 @@ import org.infantaelena.modelo.entidades.TipoPokemon;
 import org.infantaelena.vista.Vista;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +57,61 @@ public class Controlador {
         vista.getActualizarPokémonButton().addActionListener(e -> {
             actualizarPokemon();
         });
+
+        // Listener de Mostrar todos Pokémon
+        vista.getMostrarTodosLosPokemonButton().addActionListener(e -> {
+            mostrarTodos();
+        });
+
     }
+
+    private void mostrarTodos() {
+        // Llamar al método del controlador para obtener todos los Pokémon
+        List<Pokemon> listaPokemon = modelo.leerTodos();
+
+        // Crear una nueva ventana para mostrar los resultados
+        JFrame ventanaResultados = new JFrame("Lista de Pokémon");
+        ventanaResultados.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Definir las columnas de la tabla
+        String[] columnas = {"Nombre", "Tipo 1","Tipo 2", "Salud", "Ataque", "Defensa","Ataque Especial","Defensa Especial","Velocidad"};
+
+        // Crear el modelo de tabla
+        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
+
+        int contador = 0;
+        // Rellenar el modelo de tabla con los datos de la lista de Pokémon
+        for (Pokemon pokemon : listaPokemon) {
+            Object[] fila = {
+                    pokemon.getNombre(),
+                    pokemon.getTipoPrimario(),
+                    pokemon.getTipoSecundario(),
+                    String.valueOf(pokemon.getPuntosSalud()),
+                    String.valueOf(pokemon.getAtaque()),
+                    String.valueOf(pokemon.getDefensa()),
+                    String.valueOf(pokemon.getAtaqueEspecial()),
+                    String.valueOf(pokemon.getDefensaEspecial()),
+                    String.valueOf(pokemon.getVelocidad())
+            };
+            modeloTabla.addRow(fila);
+            contador = contador +1;
+            modeloTabla.setRowCount(contador);
+        }
+
+        // Crear la tabla y asignarle el modelo
+        JTable tablaPokemon = new JTable(modeloTabla);
+
+        // Agregar la tabla a un JScrollPane para permitir el desplazamiento si hay muchos Pokémon
+        JScrollPane scrollPane = new JScrollPane(tablaPokemon);
+
+        // Agregar el JScrollPane a la ventana
+        ventanaResultados.getContentPane().add(scrollPane);
+
+        // Configurar el tamaño y la visibilidad de la ventana
+        ventanaResultados.setSize(600, 400);
+        ventanaResultados.setVisible(true);
+    }
+
 
 
     private void consultarPokemon() {
@@ -70,8 +126,6 @@ public class Controlador {
         } catch (PokemonNotFoundException e) {
             vista.mensajes( nombrePokemon, 1);
         }
-
-
     }
 
     private void agregarPokemon() {
@@ -107,6 +161,10 @@ public class Controlador {
             }
         }
     }
+
+    // Listener de Mostrar Todos los Pokémon
+
+
 
     // FUNCIONES AUXILIARES
 
@@ -202,7 +260,7 @@ public class Controlador {
 
         // Actualizar el objeto Pokemon
         if (todosCorrectos) {
-             pokemonVacio = new Pokemon(nombre, tipo1, tipo2, puntosSalud, ataqueValor, defensaValor,
+            pokemonVacio = new Pokemon(nombre, tipo1, tipo2, puntosSalud, ataqueValor, defensaValor,
                     ataqueEspecial, defensaEspecial, velocidadValor);
         }
 
