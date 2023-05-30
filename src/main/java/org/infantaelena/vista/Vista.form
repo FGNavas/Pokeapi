@@ -15,7 +15,7 @@
     </clientProperties>
     <border type="etched"/>
     <children>
-      <component id="51595" class="javax.swing.JButton" binding="consultarPokémonButton" default-binding="true">
+      <component id="51595" class="javax.swing.JButton" binding="consultarPokemonButton">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -79,7 +79,7 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="c6f34" class="javax.swing.JButton" binding="agregarPokémonButton" default-binding="true">
+      <component id="c6f34" class="javax.swing.JButton" binding="agregarPokemonButton">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -88,7 +88,7 @@
           <text value="Agregar Pokémon"/>
         </properties>
       </component>
-      <component id="bfc6e" class="javax.swing.JButton" binding="borrarPokémonButton" default-binding="true">
+      <component id="bfc6e" class="javax.swing.JButton" binding="borrarPokemonButton">
         <constraints>
           <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -98,7 +98,7 @@
           <text value="Borrar Pokémon"/>
         </properties>
       </component>
-      <component id="ad0ee" class="javax.swing.JButton" binding="actualizarPokémonButton" default-binding="true">
+      <component id="ad0ee" class="javax.swing.JButton" binding="actualizarPokemonButton">
         <constraints>
           <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="92" height="34"/>
