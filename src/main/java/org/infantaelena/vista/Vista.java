@@ -30,7 +30,7 @@ public class Vista extends JFrame{
     private JTextField cajaVelocidad;
     private JTextField cajaDefEsp;
     private JButton mostrarTodosLosPokemonButton;
-    private JButton BUSCARPORTIPOButton;
+    private JButton buscarPorTipo;
     private final String POKEMON_STATUS = "El pokemon ";
     private final String NOT_FOUND = " no se encuentra en la pokedex";
     private final String REPEATED = " esta repetido";
@@ -158,6 +158,13 @@ public class Vista extends JFrame{
         this.cajaDefEsp = cajaDefEsp;
     }
 
+    public JButton getBuscarPorTipo() {
+        return buscarPorTipo;
+    }
+
+    public void setBuscarPorTipo(JButton buscarPorTipo) {
+        this.buscarPorTipo = buscarPorTipo;
+    }
 
     public Vista() {
         setContentPane(panelMain);

@@ -63,53 +63,36 @@ public class Controlador {
             mostrarTodos();
         });
 
+        // Listener de Mostrar por tipos
+        vista.getBuscarPorTipo().addActionListener(e -> {
+            mostrarPorTipo();
+        });
+
+    }
+
+    private void mostrarPorTipo() {
+        // Capturar los tipos seleccionados
+        String tipo1 = vista.getCajaTipo1().getSelectedItem().toString();
+        String tipo2 = vista.getCajaTipo2().getSelectedItem().toString();
+        if(tipo1.equals(TipoPokemon.NINGUNO.toString())){
+            tipo1 = TipoPokemon.NORMAL.toString();
+        }
+        if(tipo2.equals(tipo1)){
+            tipo2 = TipoPokemon.NINGUNO.toString();
+        }
+
+        // Llamar al método del controlador para obtener todos los Pokémon por su tipo
+        List<Pokemon> listaPokemon = modelo.buscarPorTipo(tipo1,tipo2);
+        //Llamar a metodo que confecciona la tabla
+        crearTabla(listaPokemon);
+
     }
 
     private void mostrarTodos() {
         // Llamar al método del controlador para obtener todos los Pokémon
         List<Pokemon> listaPokemon = modelo.leerTodos();
-
-        // Crear una nueva ventana para mostrar los resultados
-        JFrame ventanaResultados = new JFrame("Lista de Pokémon");
-        ventanaResultados.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        // Definir las columnas de la tabla
-        String[] columnas = {"Nombre", "Tipo 1","Tipo 2", "Salud", "Ataque", "Defensa","Ataque Especial","Defensa Especial","Velocidad"};
-
-        // Crear el modelo de tabla
-        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
-
-        int contador = 0;
-        // Rellenar el modelo de tabla con los datos de la lista de Pokémon
-        for (Pokemon pokemon : listaPokemon) {
-            Object[] fila = {
-                    pokemon.getNombre(),
-                    pokemon.getTipoPrimario(),
-                    pokemon.getTipoSecundario(),
-                    String.valueOf(pokemon.getPuntosSalud()),
-                    String.valueOf(pokemon.getAtaque()),
-                    String.valueOf(pokemon.getDefensa()),
-                    String.valueOf(pokemon.getAtaqueEspecial()),
-                    String.valueOf(pokemon.getDefensaEspecial()),
-                    String.valueOf(pokemon.getVelocidad())
-            };
-            modeloTabla.addRow(fila);
-            contador = contador +1;
-            modeloTabla.setRowCount(contador);
-        }
-
-        // Crear la tabla y asignarle el modelo
-        JTable tablaPokemon = new JTable(modeloTabla);
-
-        // Agregar la tabla a un JScrollPane para permitir el desplazamiento si hay muchos Pokémon
-        JScrollPane scrollPane = new JScrollPane(tablaPokemon);
-
-        // Agregar el JScrollPane a la ventana
-        ventanaResultados.getContentPane().add(scrollPane);
-
-        // Configurar el tamaño y la visibilidad de la ventana
-        ventanaResultados.setSize(600, 400);
-        ventanaResultados.setVisible(true);
+        //Llamar a metodo que confecciona la tabla
+        crearTabla(listaPokemon);
     }
 
 
@@ -266,6 +249,51 @@ public class Controlador {
 
 
         return pokemonVacio;
+
+    }
+    private void crearTabla(List<Pokemon> listaPokemon){
+
+        // Crear una nueva ventana para mostrar los resultados
+        JFrame ventanaResultados = new JFrame("Lista de Pokémon");
+        ventanaResultados.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Definir las columnas de la tabla
+        String[] columnas = {"Nombre", "Tipo 1","Tipo 2", "Salud", "Ataque", "Defensa","Ataque Especial","Defensa Especial","Velocidad"};
+
+        // Crear el modelo de tabla
+        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
+
+        int contador = 0;
+        // Rellenar el modelo de tabla con los datos de la lista de Pokémon
+        for (Pokemon pokemon : listaPokemon) {
+            Object[] fila = {
+                    pokemon.getNombre(),
+                    pokemon.getTipoPrimario(),
+                    pokemon.getTipoSecundario(),
+                    String.valueOf(pokemon.getPuntosSalud()),
+                    String.valueOf(pokemon.getAtaque()),
+                    String.valueOf(pokemon.getDefensa()),
+                    String.valueOf(pokemon.getAtaqueEspecial()),
+                    String.valueOf(pokemon.getDefensaEspecial()),
+                    String.valueOf(pokemon.getVelocidad())
+            };
+            modeloTabla.addRow(fila);
+            contador = contador +1;
+            modeloTabla.setRowCount(contador);
+        }
+
+        // Crear la tabla y asignarle el modelo
+        JTable tablaPokemon = new JTable(modeloTabla);
+
+        // Agregar la tabla a un JScrollPane para permitir el desplazamiento si hay muchos Pokémon
+        JScrollPane scrollPane = new JScrollPane(tablaPokemon);
+
+        // Agregar el JScrollPane a la ventana
+        ventanaResultados.getContentPane().add(scrollPane);
+
+        // Configurar el tamaño y la visibilidad de la ventana
+        ventanaResultados.setSize(600, 400);
+        ventanaResultados.setVisible(true);
 
     }
 }
